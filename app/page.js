@@ -16,7 +16,7 @@ export default function HomePage() {
 
   const fetchChats = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/chats');
+      const res = await fetch('https://localchatbotbackend.onrender.com/api/chats');
       const data = await res.json();
       const formatted = data.map(chat => ({
         ...chat,
@@ -42,7 +42,7 @@ export default function HomePage() {
     if (!selectedChat || !selectedChat.id) return;
     setChatId(selectedChat.id);
     try {
-      const res = await fetch(`http://localhost:5000/api/chat/${selectedChat.id}`);
+      const res = await fetch(`https://localchatbotbackend.onrender.com/api/chat/${selectedChat.id}`);
       const messages = await res.json();
       setCurrentMessages(messages.map(m => ({ role: m.role, content: m.content })));
     } catch (err) {
@@ -57,7 +57,7 @@ export default function HomePage() {
     setIsStreaming(true);
     try {
       if (!currentChatId) {
-        const chatRes = await fetch("http://localhost:5000/api/chat", {
+        const chatRes = await fetch("https://localchatbotbackend.onrender.com/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ title: message }),
@@ -71,7 +71,7 @@ export default function HomePage() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
 
-      const response = await fetch(`http://localhost:5000/api/chat/${currentChatId}/message`, {
+      const response = await fetch(`https://localchatbotbackend.onrender.com/api/chat/${currentChatId}/message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
@@ -129,7 +129,7 @@ export default function HomePage() {
     if (abortControllerRef.current && chatId) {
       abortControllerRef.current.abort();
       try {
-        await fetch(`http://localhost:5000/api/chat/${chatId}/stop`, {
+        await fetch(`https://localchatbotbackend.onrender.com/api/chat/${chatId}/stop`, {
           method: "POST",
         });
       } catch (err) {
@@ -146,7 +146,7 @@ export default function HomePage() {
   const handleDeleteChat = async (id) => {
     if (!window.confirm('Are you sure you want to delete this chat?')) return;
     try {
-      await fetch(`http://localhost:5000/api/chat/${id}`, {
+      await fetch(`https://localchatbotbackend.onrender.com/api/chat/${id}`, {
         method: 'DELETE',
       });
       await fetchChats();
@@ -164,7 +164,7 @@ export default function HomePage() {
     const newTitle = window.prompt('Enter new chat title:', oldTitle);
     if (!newTitle || newTitle.trim() === oldTitle) return;
     try {
-      await fetch(`http://localhost:5000/api/chat/${id}`, {
+      await fetch(`https://localchatbotbackend.onrender.com/api/chat/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: newTitle.trim() }),
